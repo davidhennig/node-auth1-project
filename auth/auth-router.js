@@ -41,21 +41,16 @@ router.post("/login", (req, res) => {
     .first()
     .then(user => {
       if (user && bc.compareSync(password, user.password)) {
-        // if (user) {
-        // compare().then(match => {
-        //   if (match) {
-        //     // good password
-        //   } else {
-        //     // they don't match
-        //   }
-        // }).catch()
-        res.status(200).json({ message: `Welcome ${user.username}!` });
+        console.log(req.session);
+        req.session.loggedIn = true;
+        req.session.userId = user.id;
+        return res.status(200).json({ message: `Welcome ${user.username}!` });
       } else {
-        res.status(401).json({ message: "Invalid Credentials" });
+        return res.status(401).json({ message: "Invalid Credentials" });
       }
     })
     .catch(error => {
-      res.status(500).json(error);
+      return res.status(500).json(error);
     });
 });
 
